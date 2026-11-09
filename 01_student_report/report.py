@@ -13,7 +13,7 @@ def build_report(classroom: Classroom) -> str:
             continue
 
         average = student.average()
-        result = "合格○" if average >= 60 else "不合格×"
+        result = "合格" if average >= 60 else "不合格"
         lines.append(f"{student.name}: 平均{average:.1f}点 / {result}")
 
     return "\n".join(lines)
