@@ -20,4 +20,20 @@ def test_report_shows_available_and_borrowed_books_without_mutation():
     assert [book.borrower_id for book in books] == before
 
 
-# TODO: 空の図書館と、返却後のレポートをテストする。
+def test_report_for_empty_library_has_one_line_without_trailing_newline():
+    library = Library([], [])
+
+    result = build_report(library)
+
+    assert result == "図書館の本:"
+
+
+def test_report_after_return_shows_book_as_available():
+    book = Book(1, "Python入門")
+    library = Library([book], [Member(1, "田中")])
+    library.lend_book(1, 1)
+    library.return_book(1, 1)
+
+    result = build_report(library)
+
+    assert result == "図書館の本:\n1: Python入門 [貸出可能]"

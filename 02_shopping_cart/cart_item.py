@@ -8,4 +8,4 @@ class CartItem:
 
     def subtotal(self) -> int:
         # この計算を、READMEの仕様と比較して確認する。
-        return self.product.price
+        return self.product.price * self.quantity

@@ -1,3 +1,5 @@
+import pytest
+
 from cart import Cart
 from product import Product
 
@@ -34,5 +36,28 @@ def test_total_uses_quantities():
     assert [item.quantity for item in cart.items] == [2, 3]
 
 
-# TODO: 不正な数量でValueErrorになり、カートが変化しないことを確認する。
-# TODO: 同じ商品を複数回追加した場合の合計を確認する。
+@pytest.mark.parametrize("quantity", [0, -1, 1.5, "2", None, True, False])
+def test_invalid_quantity_raises_without_changing_cart(quantity):
+    cart = Cart()
+    existing_product = Product(1, "りんご", 200)
+    cart.add_item(existing_product, 1)
+    items_before = cart.items.copy()
+
+    with pytest.raises(ValueError, match="数量は1以上の整数にしてください"):
+        cart.add_item(Product(2, "牛乳", 250), quantity)
+
+    assert cart.items == items_before
+    assert cart.total() == 200
+
+
+def test_same_product_added_twice_is_kept_as_two_items_and_summed():
+    cart = Cart()
+    apple = Product(1, "りんご", 200)
+    cart.add_item(apple, 2)
+    cart.add_item(apple, 3)
+
+    assert len(cart.items) == 2
+    assert cart.items[0].product is apple
+    assert cart.items[1].product is apple
+    assert [item.quantity for item in cart.items] == [2, 3]
+    assert cart.total() == 1000

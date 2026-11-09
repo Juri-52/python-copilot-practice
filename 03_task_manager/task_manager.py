@@ -12,5 +12,8 @@ class TaskManager:
         return task
 
     def complete_task(self, task_id: int) -> None:
-        # TODO: IDで対象を探し、READMEの条件に従って完了させる。
-        pass
+        for task in self.tasks:
+            if task.task_id == task_id:
+                task.complete()
+                return
+        raise ValueError("タスクが見つかりません")

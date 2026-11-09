@@ -7,7 +7,8 @@ class Cart:
         self.items: list[CartItem] = []
 
     def add_item(self, product: Product, quantity: int) -> None:
-        # TODO: 数量の条件を確認し、不正な場合は追加前に例外を発生させる。
+        if type(quantity) is not int or quantity < 1:
+            raise ValueError("数量は1以上の整数にしてください")
         self.items.append(CartItem(product, quantity))
 
     def total(self) -> int:

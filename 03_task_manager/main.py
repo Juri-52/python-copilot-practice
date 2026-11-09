@@ -5,7 +5,7 @@ from task_storage import load_tasks, save_tasks
 def main() -> None:
     manager = TaskManager(load_tasks("tasks.json"))
     manager.add_task("テストを書く")
-    # TODO: IDが2のタスクを完了させてから保存する。
+    manager.complete_task(2)
     save_tasks("tasks_result.json", manager.tasks)
 
     restored = load_tasks("tasks_result.json")

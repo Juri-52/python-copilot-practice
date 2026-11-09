@@ -1,3 +1,5 @@
+import pytest
+
 from task import Task
 from task_manager import TaskManager
 
@@ -26,3 +28,33 @@ def test_new_id_uses_largest_existing_id():
 
 
 # TODO: 完了処理、対象外のタスク、存在しないID、再度の完了をテストする。
+def test_complete_task_marks_only_the_requested_task_as_completed():
+    first = Task(1, "コードを読む")
+    target = Task(2, "仕様を確認する")
+    third = Task(3, "テストを書く", completed=True)
+    manager = TaskManager([first, target, third])
+
+    manager.complete_task(2)
+
+    assert [task.completed for task in manager.tasks] == [False, True, True]
+    assert [(task.task_id, task.title) for task in manager.tasks] == [
+        (1, "コードを読む"),
+        (2, "仕様を確認する"),
+        (3, "テストを書く"),
+    ]
+
+
+def test_complete_task_raises_for_unknown_id():
+    manager = TaskManager([Task(1, "コードを読む")])
+
+    with pytest.raises(ValueError, match="^タスクが見つかりません$"):
+        manager.complete_task(99)
+
+
+def test_complete_task_can_be_called_twice():
+    manager = TaskManager([Task(1, "コードを読む")])
+
+    manager.complete_task(1)
+    manager.complete_task(1)
+
+    assert manager.tasks[0].completed is True

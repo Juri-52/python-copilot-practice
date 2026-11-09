@@ -5,5 +5,4 @@ class Task:
         self.completed = completed
 
     def complete(self) -> None:
-        # TODO: 完了状態に変更する。
-        pass
+        self.completed = True
